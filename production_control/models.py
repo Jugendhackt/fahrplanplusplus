@@ -57,7 +57,6 @@ class Performance(models.Model):
 		end = 0
 		if self.actual_start and self.actual_duration:
 			end = self.actual_start + datetime.timedelta(0, self.actual_duration)
-			print(end)
 		return end
 
 	@property
@@ -92,7 +91,6 @@ class Performance(models.Model):
 			
 			i+=1
 
-		print(delay_seconds)
 		return delay_seconds
 
 	@property
