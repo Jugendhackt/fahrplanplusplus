@@ -1,8 +1,13 @@
 from rest_framework import serializers
 
-from .models import Event
+from .models import Event, Venue
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Event
-        fields = ['id', 'name', 'upstream_agenda_url', 'upstream_name']
+	class Meta:
+		model = Event
+		fields = '__all__'
+
+class VenueSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = Venue
+		fields = '__all__'
