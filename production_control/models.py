@@ -54,7 +54,7 @@ class Performance(models.Model):
 	
 	@property
 	def actual_end(self):
-		end = 0
+		end = None
 		if self.actual_start and self.actual_duration:
 			end = self.actual_start + datetime.timedelta(0, self.actual_duration)
 		return end
