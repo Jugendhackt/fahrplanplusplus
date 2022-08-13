@@ -69,7 +69,7 @@ class Performance(models.Model):
 			p = all_performances[i]
 						
 			# default case: no actual data available
-			# first case: we are running, have no actual end yet, so the delay 
+			# first case: we are running, have no actual end yet, so the delay is the start delay
 			if p.actual_start:
 				delay_seconds = (p.actual_start-p.planned_start).total_seconds()
 			# if we are already done, set the end delay
@@ -95,7 +95,6 @@ class Performance(models.Model):
 
 	@property
 	def estimated_start(self):
-		ret = 0
 		# if we already have an actual start, that is our estimated start
 		if self.actual_start:
 			ret = self.actual_start
