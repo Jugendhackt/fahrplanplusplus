@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+import datetime
 
 # example json: https://pretalx.margau.net/dtjhhnfm2022/schedule/export/schedule.json
 
@@ -45,3 +46,48 @@ class Performance(models.Model):
 	actual_duration = models.IntegerField(blank=True, null=True)
 	start = models.IntegerField(choices=StartCondition.choices, default=0)
 	end = models.IntegerField(choices=EndCondition.choices, default=0)
+
+	@property
+	def planned_end(self):
+		end = self.planned_start + datetime.timedelta(0, self.planned_duration)
+		return end
+	
+	@property
+	def actual_end(self):
+		end = 0
+		if self.actual_start and self.actual_duration:
+			end = self.actual_start + datetime.timedelta(0, self.actual_duration)
+		return end
+
+	@property
+	def delay_seconds(self):
+		delay_seconds = 0
+		i = 0
+		all_performances = Performance.objects.filter(venue=self.venue).order_by("planned_start")
+		print(all_performances)
+		# loop over all performances to find delay
+		while i < len(all_performances):
+			p = all_performances[i]
+			i+=1
+			if p.id == self.id:
+				break
+
+			# default case: no actual data available
+			# first case: we are running, have no actual end yet, so the delay 
+			if p.actual_start:
+				delay_seconds = (p.actual_start-p.planned_start).total_seconds()
+			# if we are already done, set the end delay
+			if p.actual_end:
+				delay_seconds = (p.actual_end-p.planned_end).total_seconds()
+		
+			# todo: Check earlier/later talks
+
+		return delay_seconds
+
+	@property
+	def estimated_start(self):
+		# if we already have an actual start, that is our estimated start
+		if self.actual_start:
+			return self.actual_start
+		
+		return self.planned_start + datetime.timedelta(0, self.delay_seconds)
