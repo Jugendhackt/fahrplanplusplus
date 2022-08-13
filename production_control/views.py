@@ -2,8 +2,8 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from .serializers import EventSerializer, VenueSerializer
-from .models import Event, Venue
+from .serializers import EventSerializer, VenueSerializer, PerformanceSerializer
+from .models import Event, Venue, Performance
 from .upstream import update as upstream_update
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -22,8 +22,16 @@ class EventViewSet(viewsets.ModelViewSet):
 
 class VenueViewSet(viewsets.ModelViewSet):
 	"""
-	Show/Edit Events
+	Show/Edit Venues
 	"""
 	queryset = Venue.objects.all()
 	serializer_class = VenueSerializer
+	permission_classes = [permissions.AllowAny]
+
+class PerformanceViewSet(viewsets.ModelViewSet):
+	"""
+	Show/Edit Events
+	"""
+	queryset = Performance.objects.all()
+	serializer_class = PerformanceSerializer
 	permission_classes = [permissions.AllowAny]
