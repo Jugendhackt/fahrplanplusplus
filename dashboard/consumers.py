@@ -3,13 +3,14 @@ import json
 from channels.generic.websocket import WebsocketConsumer
 import channels.layers
 from asgiref.sync import async_to_sync
+import production_control.broadcast
 
 
 class DashboardConsumer(WebsocketConsumer):
 	def connect(self):
 		async_to_sync(self.channel_layer.group_add)("dashboard",self.channel_name)
-
 		self.accept()
+		production_control.broadcast.broadcast_status()
 
 	def disconnect(self, close_code):
 		async_to_sync(self.channel_layer.group_discard)(
