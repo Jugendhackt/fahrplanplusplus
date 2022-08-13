@@ -11,6 +11,7 @@ from asgiref.sync import async_to_sync
 from django.forms.models import model_to_dict
 import json
 from django.core.serializers.json import DjangoJSONEncoder
+from . import broadcast
 
 class EventViewSet(viewsets.ModelViewSet):
 	"""
@@ -33,14 +34,12 @@ class VenueViewSet(viewsets.ModelViewSet):
 	queryset = Venue.objects.all()
 	serializer_class = VenueSerializer
 	permission_classes = [permissions.AllowAny]
+	broadcast.broadcast_status()
 	@action(detail=True)
 	def current_timeline(self, request, pk):
 		# todo: Error Handling
+		broadcast.broadcast_status()
 		serializer = PerformanceSerializer(Performance.objects.filter(venue=self.get_object().id).order_by("planned_start"),many=True,context={'request': request})
-		async_to_sync(get_channel_layer().group_send)(
-            "dashboard",
-			{"type":"dashboard_message","data":json.dumps(serializer.data, cls=DjangoJSONEncoder)}
-        )
 		return Response(serializer.data)
 
 class PerformanceViewSet(viewsets.ModelViewSet):
@@ -50,3 +49,4 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 	queryset = Performance.objects.all()
 	serializer_class = PerformanceSerializer
 	permission_classes = [permissions.AllowAny]
+	broadcast.broadcast_status()
