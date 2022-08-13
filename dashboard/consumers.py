@@ -1,15 +1,24 @@
 # chat/consumers.py
 import json
 from channels.generic.websocket import WebsocketConsumer
+import channels.layers
+from asgiref.sync import async_to_sync
+
 
 class DashboardConsumer(WebsocketConsumer):
-    def connect(self):
-        self.accept()
+	def connect(self):
+		async_to_sync(self.channel_layer.group_add)("dashboard",self.channel_name)
 
-    def disconnect(self, close_code):
-        pass
+		self.accept()
 
-    def receive(self, text_data):
-        self.send(text_data=json.dumps({
-            'message': "test"
-        }))
+	def disconnect(self, close_code):
+		async_to_sync(self.channel_layer.group_discard)(
+            "dashboard",
+            self.channel_name
+        )
+	    # Receive message from room group
+	def dashboard_message(self, event):
+		message = event['data']
+
+		# Send message to WebSocket
+		self.send(text_data=message)

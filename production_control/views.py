@@ -5,6 +5,12 @@ from rest_framework.decorators import action
 from .serializers import EventSerializer, VenueSerializer, PerformanceSerializer
 from .models import Event, Venue, Performance
 from .upstream import update as upstream_update
+import channels.layers
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from django.forms.models import model_to_dict
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 
 class EventViewSet(viewsets.ModelViewSet):
 	"""
@@ -31,6 +37,10 @@ class VenueViewSet(viewsets.ModelViewSet):
 	def current_timeline(self, request, pk):
 		# todo: Error Handling
 		serializer = PerformanceSerializer(Performance.objects.filter(venue=self.get_object().id).order_by("planned_start"),many=True,context={'request': request})
+		async_to_sync(get_channel_layer().group_send)(
+            "dashboard",
+			{"type":"dashboard_message","data":json.dumps(serializer.data, cls=DjangoJSONEncoder)}
+        )
 		return Response(serializer.data)
 
 class PerformanceViewSet(viewsets.ModelViewSet):
