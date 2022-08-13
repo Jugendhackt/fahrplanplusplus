@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 
 from .serializers import EventSerializer, VenueSerializer
 from .models import Event, Venue
+from .upstream import update as upstream_update
 
 class EventViewSet(viewsets.ModelViewSet):
 	"""
@@ -12,6 +13,12 @@ class EventViewSet(viewsets.ModelViewSet):
 	queryset = Event.objects.all()
 	serializer_class = EventSerializer
 	permission_classes = [permissions.AllowAny]
+	
+	@action(detail=True, methods=['post'])
+	def update_upstream(self, request, pk):
+		upstream_update(self.get_object())
+		# todo: Error Handling
+		return Response()
 
 class VenueViewSet(viewsets.ModelViewSet):
 	"""
