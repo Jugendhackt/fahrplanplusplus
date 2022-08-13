@@ -7,11 +7,8 @@ from .models import Event
 
 class EventViewSet(viewsets.ModelViewSet):
 	"""
-	Edit the Event
+	Edit Events
 	"""
 	queryset = Event.objects.all()
 	serializer_class = EventSerializer
-	permission_classes = []
-	
-	def perform_create(self, serializer):
-		serializer.save()
+	permission_classes = [permissions.AllowAny]
