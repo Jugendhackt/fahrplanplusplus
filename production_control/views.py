@@ -1,5 +1,17 @@
-from django.http import HttpResponse
+from rest_framework import viewsets, permissions
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
+from .serializers import EventSerializer
+from .models import Event
 
-def index(request):
-    return HttpResponse("Production Control Main Page")
+class EventViewSet(viewsets.ModelViewSet):
+	"""
+	Edit the Event
+	"""
+	queryset = Event.objects.all()
+	serializer_class = EventSerializer
+	permission_classes = []
+	
+	def perform_create(self, serializer):
+		serializer.save()
