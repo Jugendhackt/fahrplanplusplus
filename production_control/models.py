@@ -57,6 +57,7 @@ class Performance(models.Model):
 		end = 0
 		if self.actual_start and self.actual_duration:
 			end = self.actual_start + datetime.timedelta(0, self.actual_duration)
+			print(end)
 		return end
 
 	@property
@@ -64,14 +65,10 @@ class Performance(models.Model):
 		delay_seconds = 0
 		i = 0
 		all_performances = Performance.objects.filter(venue=self.venue).order_by("planned_start")
-		print(all_performances)
 		# loop over all performances to find delay
 		while i < len(all_performances):
 			p = all_performances[i]
-			i+=1
-			if p.id == self.id:
-				break
-
+						
 			# default case: no actual data available
 			# first case: we are running, have no actual end yet, so the delay 
 			if p.actual_start:
@@ -79,15 +76,37 @@ class Performance(models.Model):
 			# if we are already done, set the end delay
 			if p.actual_end:
 				delay_seconds = (p.actual_end-p.planned_end).total_seconds()
-		
-			# todo: Check earlier/later talks
+			
+			# if we are not the first check
+			if i > 0 and all_performances[i-1]:
+				# if our start is later or equal than the previous estimated end, no delay is left
+				if p.planned_start >= all_performances[i-1].estimated_end:
+					delay_seconds = 0
+				# otherwise, the delay is the time delay between the prev. end and our planned start
+				else:
+					delay_seconds = (all_performances[i-1].estimated_end - p.planned_start).total_seconds()
 
+			# if this is our searched performance, stop here
+			if p.id == self.id:
+				return delay_seconds
+			
+			i+=1
+
+		print(delay_seconds)
 		return delay_seconds
 
 	@property
 	def estimated_start(self):
+		ret = 0
 		# if we already have an actual start, that is our estimated start
 		if self.actual_start:
-			return self.actual_start
-		
-		return self.planned_start + datetime.timedelta(0, self.delay_seconds)
+			ret = self.actual_start
+		else:
+			ret = self.planned_start + datetime.timedelta(0, self.delay_seconds)
+		return ret
+	
+	@property
+	def estimated_end(self):
+		if self.actual_end:
+			return self.actual_end
+		return self.planned_end + datetime.timedelta(0, self.delay_seconds)
