@@ -65,7 +65,7 @@ class Performance(models.Model):
 		i = 0
 		all_performances = Performance.objects.filter(venue=self.venue).order_by("planned_start")
 		# loop over all performances to find delay
-		while i < len(all_performances):
+		for p in all_performances:
 			p = all_performances[i]
 						
 			# default case: no actual data available
