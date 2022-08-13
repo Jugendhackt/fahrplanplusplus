@@ -28,9 +28,7 @@ def update(event):
 				venue = Venue.objects.get(upstream_name = roomname)
 				for upstream_perf in room:
 					p_start = parser.parse(upstream_perf["start"])
-					print(p_start)
 					p_duration = timeparse(upstream_perf["duration"])*60
-					print(p_duration)
 					p, created = Performance.objects.update_or_create(
 						upstream_uuid = upstream_perf["guid"],
 						defaults={

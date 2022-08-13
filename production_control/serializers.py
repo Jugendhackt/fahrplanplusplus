@@ -13,6 +13,12 @@ class VenueSerializer(serializers.HyperlinkedModelSerializer):
 		fields = '__all__'
 
 class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
+	planned_end = serializers.ReadOnlyField()
+	actual_end = serializers.ReadOnlyField()
+	estimated_start = serializers.ReadOnlyField()
+	estimated_end = serializers.ReadOnlyField()
+	delay_seconds = serializers.ReadOnlyField()
+
 	class Meta:
 		model = Performance
 		fields = '__all__'

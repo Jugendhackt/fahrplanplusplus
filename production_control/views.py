@@ -27,6 +27,11 @@ class VenueViewSet(viewsets.ModelViewSet):
 	queryset = Venue.objects.all()
 	serializer_class = VenueSerializer
 	permission_classes = [permissions.AllowAny]
+	@action(detail=True)
+	def current_timeline(self, request, pk):
+		# todo: Error Handling
+		serializer = PerformanceSerializer(Performance.objects.filter(venue=self.get_object().id).order_by("planned_start"),many=True,context={'request': request})
+		return Response(serializer.data)
 
 class PerformanceViewSet(viewsets.ModelViewSet):
 	"""
