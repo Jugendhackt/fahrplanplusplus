@@ -3,16 +3,25 @@ from django.db import models
 # example json: https://pretalx.margau.net/dtjhhnfm2022/schedule/export/schedule.json
 
 class Event(models.Model):
+	def __str__(self):
+		return 'Event: ' + self.name
+
 	name = models.CharField(max_length=200)
 	upstream_agenda_url = models.URLField(blank=True)
 	upstream_name = models.CharField(max_length=200, blank=True)
 
 class Venue(models.Model):
+	def __str__(self):
+		return 'Venue: ' + self.name
+
 	event = models.ForeignKey(Event, on_delete=models.CASCADE)
 	name = models.CharField(max_length=200)
 	upstream_name = models.CharField(max_length=200, blank=True)
 
 class Performance(models.Model):
+	def __str__(self):
+		return 'Performance: ' + self.name
+
 	# in general it is possible that no performance at all is running
 	class StartCondition(models.IntegerChoices):
 		MANUAL = 0
