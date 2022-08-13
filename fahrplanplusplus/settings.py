@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'production_control.apps.ProductionControlConfig',
+    'dashboard.apps.DashboardConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
