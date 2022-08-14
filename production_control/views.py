@@ -34,7 +34,7 @@ class VenueViewSet(viewsets.ModelViewSet):
 	queryset = Venue.objects.all()
 	serializer_class = VenueSerializer
 	permission_classes = [permissions.AllowAny]
-	broadcast.broadcast_status()
+
 	@action(detail=True)
 	def current_timeline(self, request, pk):
 		# todo: Error Handling
@@ -49,4 +49,4 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 	queryset = Performance.objects.all()
 	serializer_class = PerformanceSerializer
 	permission_classes = [permissions.AllowAny]
-	broadcast.broadcast_status()
+	
