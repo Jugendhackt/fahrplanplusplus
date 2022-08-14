@@ -10,8 +10,13 @@ class Event(models.Model):
 
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	name = models.CharField(max_length=200)
+	time_offset = models.IntegerField(default=0)
 	upstream_agenda_url = models.URLField(blank=True)
 	upstream_name = models.CharField(max_length=200, blank=True)
+	
+	@property
+	def current_time(self):
+		return datetime.datetime.now() + datetime.timedelta(0, self.time_offset)
 
 class Venue(models.Model):
 	def __str__(self):
