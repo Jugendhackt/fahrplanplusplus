@@ -23,12 +23,12 @@ def broadcast_status():
 def build_dict():
 	data = {
 		"venues": {},
-		"time": datetime.now()
+		"global_time": datetime.now()
 	}
 	for v in Venue.objects.all():
-		serializer = PerformanceSerializerPlain(Performance.objects.filter(venue=v.id).order_by("planned_start"),many=True)
-		data["venues"][str(v.id)] = {"venue":model_to_dict(v)}
-		data["venues"][str(v.id)] = {"talks": serializer.data}
-	
+		performances = Performance.objects.filter(venue=v.id).order_by("planned_start")
+		serializer = PerformanceSerializerPlain(performances,many=True)
+		# we have another time per event, calculated by the event model.
+		data["venues"][str(v.id)] = {"venue":model_to_dict(v), "talks": serializer.data, "time": v.event.current_time}
 
 	return data
