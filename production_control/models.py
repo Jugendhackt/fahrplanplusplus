@@ -1,6 +1,6 @@
 from django.db import models
 import uuid
-import datetime
+from datetime import timezone,datetime, timedelta
 
 # example json: https://pretalx.margau.net/dtjhhnfm2022/schedule/export/schedule.json
 
@@ -16,7 +16,7 @@ class Event(models.Model):
 	
 	@property
 	def current_time(self):
-		return datetime.datetime.now() + datetime.timedelta(0, self.time_offset)
+		return datetime.now(timezone.utc) + timedelta(0, self.time_offset)
 
 class Venue(models.Model):
 	def __str__(self):
@@ -54,14 +54,14 @@ class Performance(models.Model):
 
 	@property
 	def planned_end(self):
-		end = self.planned_start + datetime.timedelta(0, self.planned_duration)
+		end = self.planned_start + timedelta(0, self.planned_duration)
 		return end
 	
 	@property
 	def actual_end(self):
 		end = None
 		if self.actual_start and self.actual_duration:
-			end = self.actual_start + datetime.timedelta(0, self.actual_duration)
+			end = self.actual_start + timedelta(0, self.actual_duration)
 		return end
 
 	@property
@@ -104,11 +104,11 @@ class Performance(models.Model):
 		if self.actual_start:
 			ret = self.actual_start
 		else:
-			ret = self.planned_start + datetime.timedelta(0, self.delay_seconds)
+			ret = self.planned_start + timedelta(0, self.delay_seconds)
 		return ret
 	
 	@property
 	def estimated_end(self):
 		if self.actual_end:
 			return self.actual_end
-		return self.planned_end + datetime.timedelta(0, self.delay_seconds)
+		return self.planned_end + timedelta(0, self.delay_seconds)
