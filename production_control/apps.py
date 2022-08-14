@@ -1,7 +1,8 @@
 from django.apps import AppConfig
 from django.core.signals import request_finished
-from django.db.models.signals import  post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
+
 
 class ProductionControlConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'

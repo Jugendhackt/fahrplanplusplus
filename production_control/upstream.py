@@ -1,7 +1,11 @@
-import urllib.request, json 
+import json
+import urllib.request
+
 from dateutil import parser
-from .models import Venue, Performance
 from pytimeparse.timeparse import timeparse
+
+from .models import Performance, Venue
+
 
 def update(event):
 	with urllib.request.urlopen(event.upstream_agenda_url) as url:

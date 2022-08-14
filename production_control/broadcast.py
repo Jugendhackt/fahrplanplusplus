@@ -1,17 +1,20 @@
-from datetime import datetime
-from rest_framework import viewsets, permissions
-from rest_framework.response import Response
-from rest_framework.decorators import action
-
-from .serializers import EventSerializer, VenueSerializer, PerformanceSerializerPlain
-from .models import Event, Venue, Performance
-from .upstream import update as upstream_update
-import channels.layers
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-from django.forms.models import model_to_dict
 import json
+from datetime import datetime
+
+import channels.layers
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+from rest_framework import permissions, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+from .models import Event, Performance, Venue
+from .serializers import (EventSerializer, PerformanceSerializerPlain,
+                          VenueSerializer)
+from .upstream import update as upstream_update
+
 
 def broadcast_status():
 	

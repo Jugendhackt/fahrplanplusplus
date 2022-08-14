@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Event, Performance, Venue
 
+
 class EventSerializer(serializers.HyperlinkedModelSerializer):
 	current_time = serializers.ReadOnlyField()
 	

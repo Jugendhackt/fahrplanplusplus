@@ -1,17 +1,20 @@
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
-
-from .serializers import EventSerializer, VenueSerializer, PerformanceSerializer
-from .models import Event, Venue, Performance
-from .upstream import update as upstream_update
-import channels.layers
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
-from django.forms.models import model_to_dict
 import json
+
+import channels.layers
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from . import broadcast
+from .models import Event, Performance, Venue
+from .serializers import (EventSerializer, PerformanceSerializer,
+                          VenueSerializer)
+from .upstream import update as upstream_update
+
 
 class EventViewSet(viewsets.ModelViewSet):
 	"""

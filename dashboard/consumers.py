@@ -1,8 +1,10 @@
 # chat/consumers.py
 import json
-from channels.generic.websocket import WebsocketConsumer
+
 import channels.layers
 from asgiref.sync import async_to_sync
+from channels.generic.websocket import WebsocketConsumer
+
 import production_control.broadcast
 
 

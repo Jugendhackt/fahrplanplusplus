@@ -1,6 +1,7 @@
-from django.db import models
 import uuid
-from datetime import timezone,datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+from django.db import models
 
 # example json: https://pretalx.margau.net/dtjhhnfm2022/schedule/export/schedule.json
 
