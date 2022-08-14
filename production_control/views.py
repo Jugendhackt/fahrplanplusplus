@@ -57,3 +57,16 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 		perf.actual_start = perf.venue.event.current_time
 		perf.save()
 		return Response(PerformanceSerializer(perf,context={'request': request}).data)
+
+	@action(detail=True,methods=["POST"])
+	def end(self, request, pk):
+		perf = self.get_object()
+		if perf.actual_end:
+			return Response("Performance already ended", status.HTTP_400_BAD_REQUEST)
+		if not perf.actual_start:
+			return Response("Performance not started yet", status.HTTP_400_BAD_REQUEST)
+		
+		end = perf.venue.event.current_time
+		perf.actual_duration = (end - perf.actual_start).seconds
+		perf.save()
+		return Response(PerformanceSerializer(perf,context={'request': request}).data)
