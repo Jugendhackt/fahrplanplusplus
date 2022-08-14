@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
@@ -38,7 +38,6 @@ class VenueViewSet(viewsets.ModelViewSet):
 	@action(detail=True)
 	def current_timeline(self, request, pk):
 		# todo: Error Handling
-		broadcast.broadcast_status()
 		serializer = PerformanceSerializer(Performance.objects.filter(venue=self.get_object().id).order_by("planned_start"),many=True,context={'request': request})
 		return Response(serializer.data)
 
@@ -50,3 +49,11 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 	serializer_class = PerformanceSerializer
 	permission_classes = [permissions.AllowAny]
 	
+	@action(detail=True,methods=["POST"])
+	def start(self, request, pk):
+		perf = self.get_object()
+		if perf.actual_start:
+			return Response("Performance Already started", status.HTTP_400_BAD_REQUEST)
+		perf.actual_start = perf.venue.event.current_time
+		perf.save()
+		return Response(PerformanceSerializer(perf,context={'request': request}).data)
