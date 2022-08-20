@@ -3,8 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Event, Performance, Venue
-from .serializers import (EventSerializer, PerformanceSerializer,
-                          VenueSerializer)
+from .serializers import EventSerializer, PerformanceSerializer, VenueSerializer
 from .upstream import update as upstream_update
 
 
