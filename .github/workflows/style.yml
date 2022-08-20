@@ -38,3 +38,7 @@ jobs:
         run: |
           source .venv/bin/activate
           flake8 . --show-source --extend-exclude ".venv/,**/migrations/*"
+      - name: Run black
+        run: |
+          source .venv/bin/activate
+          black --check --extend-exclude ".venv/|/migrations/|manage.py" .
