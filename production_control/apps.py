@@ -5,8 +5,8 @@ from django.dispatch import receiver
 
 
 class ProductionControlConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'production_control'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "production_control"
 
     def ready(self):
         request_finished.connect(self.signal_handler)
@@ -15,4 +15,5 @@ class ProductionControlConfig(AppConfig):
 
     def signal_handler(self, sender, **kwargs):
         from production_control import broadcast
+
         broadcast.broadcast_status()
