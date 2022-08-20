@@ -1,7 +1,6 @@
 from django.apps import AppConfig
 from django.core.signals import request_finished
 from django.db.models.signals import post_delete, post_save
-from django.dispatch import receiver
 
 
 class ProductionControlConfig(AppConfig):

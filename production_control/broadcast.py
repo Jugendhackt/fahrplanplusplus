@@ -1,18 +1,13 @@
 import json
 from datetime import datetime
 
-import channels.layers
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms.models import model_to_dict
-from rest_framework import permissions, viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
 
-from .models import Event, Performance, Venue
-from .serializers import EventSerializer, PerformanceSerializerPlain, VenueSerializer
-from .upstream import update as upstream_update
+from .models import Performance, Venue
+from .serializers import PerformanceSerializerPlain
 
 
 def broadcast_status():

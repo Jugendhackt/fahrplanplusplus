@@ -37,7 +37,7 @@ jobs:
       - name: Run flake8
         run: |
           source .venv/bin/activate
-          flake8 . --show-source --extend-exclude ".venv/,**/migrations/*"
+          flake8 . --show-source --extend-exclude ".venv/,**/migrations/*" --ignore=E501
       - name: Run black
         run: |
           source .venv/bin/activate
