@@ -121,3 +121,21 @@ class Performance(models.Model):
         if self.actual_end:
             return self.actual_end
         return self.planned_end + timedelta(0, self.delay_seconds)
+
+class Departement(models.Model):
+    def __str__(self):
+        return "Departement: " + self.name
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=200)
+    default_annotation = models.TextField(blank=True)
+
+class PerformanceAnnotation(models.Model):
+    def __str__(self):
+        return self.departement.name + " Annotation: " + self.content
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    performance = models.ForeignKey(Performance, on_delete=models.CASCADE)
+    departement = models.ForeignKey(Departement, on_delete=models.CASCADE)
+    content = models.TextField()
+    
