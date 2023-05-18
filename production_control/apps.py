@@ -15,4 +15,5 @@ class ProductionControlConfig(AppConfig):
     def signal_handler(self, sender, **kwargs):
         from production_control import broadcast
 
-        broadcast.broadcast_status()
+        # todo: run broadcast status only on regular app run
+        # broadcast.broadcast_status()
